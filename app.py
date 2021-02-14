@@ -56,7 +56,14 @@ def precipitation():
     # Creating our session (link) from Python to the DB
     session = Session(engine)
 
-    year_ago = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+    # Finding the last data point in the DB
+    last_data_point = session.query(Measurement.date).\
+            order_by(Measurement.date.desc()).first()
+
+    last_date = dt.datetime.strptime(last_data_point[0], "%Y-%m-%d")
+
+    # Finding the date a year from the last point in the data set
+    year_ago = dt.date(last_date.year, last_date.month, last_date.day) - dt.timedelta(days=365)
 
     results = session.query(Measurement.date, Measurement.prcp).\
         filter(Measurement.date >= year_ago).\
@@ -96,6 +103,55 @@ def stations():
 
     return jsonify(station_id_name)
 
+
+# Observed temperatures route
+@app.route("/api/v1.0/tobs")
+def most_active():
+
+    # Creating our session (link) from Python to the DB
+    session = Session(engine)
+
+    # ranking the stations by number of observations
+    active_stations = session.query(Measurement.station, func.count(Measurement.station)).\
+                    group_by(Measurement.station).\
+                    order_by(func.count(Measurement.station).desc()).all()
+    
+    # Isolating the id of the most active station
+    most_active_station = active_stations[0][0]
+
+    # Finding the name of the most active station
+    name_most_active_station = (session.query(Station.name).\
+        filter(Station.station == most_active_station).first())[0]
+
+    # Finding the last data point in the DB
+    last_data_point = session.query(Measurement.date).\
+            order_by(Measurement.date.desc()).first()
+
+    last_date = dt.datetime.strptime(last_data_point[0], "%Y-%m-%d")
+
+    # Finding the date a year from the last point in the data set
+    year_ago = dt.date(last_date.year, last_date.month, last_date.day) - dt.timedelta(days=365)
+
+    # Querying the temperature
+    temp_most_active = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.station == most_active_station).\
+        filter(Measurement.date >= year_ago).\
+        order_by(Measurement.date).all()
+
+    # closing session
+    session.close
+
+    temperatures = []
+    for date, tobs in temp_most_active:
+        temp_dict = {}
+        temp_dict["station name"] = name_most_active_station
+        temp_dict["date"] = date
+        temp_dict["tobs"] = tobs
+        temperatures.append(temp_dict)
+
+    return jsonify(temperatures)
+# Query the dates and temperature observations of the most active station for the last year of data.
+# Return a JSON list of temperature observations (TOBS) for the previous year.
 
 if __name__ == '__main__':
     app.run(debug=True)
