@@ -39,14 +39,13 @@ app = Flask(__name__)
 @app.route("/")
 def welcome():
     return (
-        f"Welcome to the Surfs Up Climate API"
+        f"Welcome to the Surfs Up Climate API<br/><br/>"
         f"Available Routes:<br/>"
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end><br/>"
-        
+        f"/api/v1.0/yyyy-mm-dd<br/>"
+        f"/api/v1.0/yyyy-mm-dd/yyyy-mm-dd<br/>"    
     )
 
 
@@ -132,7 +131,7 @@ def most_active():
     # Finding the date a year from the last point in the data set
     year_ago = dt.date(last_date.year, last_date.month, last_date.day) - dt.timedelta(days=365)
 
-    # Querying the temperature
+    # Querying dates and temperature observations of the most active station for the last year of data.
     temp_most_active = session.query(Measurement.date, Measurement.tobs).\
         filter(Measurement.station == most_active_station).\
         filter(Measurement.date >= year_ago).\
@@ -141,6 +140,7 @@ def most_active():
     # closing session
     session.close
 
+    # Returning a JSON list of temperature observations (TOBS) for the previous year.
     temperatures = []
     for date, tobs in temp_most_active:
         temp_dict = {}
@@ -150,8 +150,72 @@ def most_active():
         temperatures.append(temp_dict)
 
     return jsonify(temperatures)
-# Query the dates and temperature observations of the most active station for the last year of data.
-# Return a JSON list of temperature observations (TOBS) for the previous year.
+
+# start date route
+@app.route("/api/v1.0/<start>")
+# adding a variable 'start' to the function
+def start(start):
+    # Creating our session (link) from Python to the DB
+    session = Session(engine)
+
+    # altering format of user entered date
+    start_date = dt.datetime.strptime(start,"%Y-%m-%d")
+
+    # maximum temperature
+    max_temp = session.query(func.max(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).first()
+
+    # Minimum temperature
+    min_temp = session.query(func.min(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).first()
+
+    # Average temperature
+    avg_temp = session.query(func.avg(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).first()
+
+    # closing session
+    session.close
+
+    start_dict = {"TMIN": min_temp, "TMAX": max_temp, "TAVG": avg_temp}
+
+    return jsonify(start_dict)
+
+# start and end date route
+@app.route("/api/v1.0/<start>/<end>")
+# adding variables 'start' and 'end' to the function
+def start_end(start, end):
+    # Creating our session (link) from Python to the DB
+    session = Session(engine)
+
+    # setting format of user entered start date
+    start_date = dt.datetime.strptime(start,"%Y-%m-%d")
+
+    # setting format of user entered end date
+    end_date = dt.datetime.strptime(end,"%Y-%m-%d")
+
+    # Maximum temperature
+    max_temp = session.query(func.max(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).\
+        filter(Measurement.date <= end_date).first()
+
+    # Minimum temperature
+    min_temp = session.query(func.min(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).\
+        filter(Measurement.date <= end_date).first()
+
+    # Average temperature
+    avg_temp = session.query(func.avg(Measurement.tobs)).\
+        filter(Measurement.date >= start_date).\
+        filter(Measurement.date <= end_date).first()
+
+    # closing session
+    session.close
+
+    start_end_dict = {"TMIN": min_temp, "TMAX": max_temp, "TAVG": avg_temp}
+
+    return jsonify(start_end_dict)
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
