@@ -1,5 +1,4 @@
 # Imports
-
 import numpy as np
 import datetime as dt
 
@@ -45,7 +44,8 @@ def welcome():
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
         f"/api/v1.0/yyyy-mm-dd<br/>"
-        f"/api/v1.0/yyyy-mm-dd/yyyy-mm-dd<br/>"    
+        f"/api/v1.0/yyyy-mm-dd/yyyy-mm-dd<br/>"  
+        f"<br/> Data available from 2010-01-01 to 2017-08-22"  
     )
 
 
