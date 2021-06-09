@@ -21,11 +21,15 @@ Queries the last 12 months of precipitation data creating a Date vs. Precipitati
 
 ![precipitation_analysis](Resources/Images/precipitation_analysis.png)
 
+![precipitation_analysis_summary_stats](Resources/Images/precipitation_analysis_summary_stats.png)
+
+
 ### Station Analysis
 
 Queries the database to calculate the number of total stations, find the most active stations and visualise 12 months of temperature observation data for the most active station.
 
-- image
+![station_analysis](Resources/Images/station_analysis.png)
+
 
 ### Temperature Analysis I
 
@@ -39,19 +43,19 @@ The average temperature recorded across all stations in December is 71.04 degree
 A t-score of 31.6 means that the two groups of data are 31.6 times as different from each other as they are within each other. The incredibly small p-value of 3.9e-191 indicates that the difference between the means of the two groups of weather data is statistically signficant. We then reject the null hypothesis of equal averages and conclude that the differences between the data sets did not occur by chance.
 
 
-
 ### Temperature Analysis II
 
 Quering the database for the most recent length of time that matches the day and month of a proposed trip. A function is used to calculate the minimum, maximum and average temperatures for this period.
 
-- image
+![bonus_temp_graph](Resources/Images/bonus_2.png)
 
 
 ### Daily Rainfall Average
 
 Continuing to analyse the days and month of a proposed trip in relation to rainfall per weather station and daily normals.
 
-- image
+![bonus_rainfall_graph](Resources/Images/[bonus_rainfall_graph.png)
+
 
 ## Climate App
 
@@ -87,3 +91,8 @@ A flask app which provides information based on the queries developed above.
   * When given the start only,  `TMIN`, `TAVG`, and `TMAX` for all dates greater than and equal to the start date are calculated.
 
   * When given the start and the end date, the `TMIN`, `TAVG`, and `TMAX` for dates between the start and end date inclusive are calculated.
+
+
+## Viewing
+
+To view the flask app on a local machine, navigate to the directory which contains the file and run `python app.py` in terminal.
