@@ -54,7 +54,7 @@ Quering the database for the most recent length of time that matches the day and
 
 Continuing to analyse the days and month of a proposed trip in relation to rainfall per weather station and daily normals.
 
-![bonus_rainfall_graph](Resources/Images/[bonus_rainfall_graph.png)
+![bonus_rainfall_graph](Resources/Images/bonus_rainfall_graph.png)
 
 
 ## Climate App
