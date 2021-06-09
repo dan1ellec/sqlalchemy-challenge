@@ -31,7 +31,12 @@ Queries the database to calculate the number of total stations, find the most ac
 
 Queries the database to determine if there is a meaningful difference between Hawaii's temperature in June and December.
 
-- mabye some t-test info
+#### Result
+
+The average temperature recorded across all stations in June is 74.94 degrees Fahrenheit.
+The average temperature recorded across all stations in December is 71.04 degrees Fahrenheit.
+
+A t-score of 31.6 means that the two groups of data are 31.6 times as different from each other as they are within each other. The incredibly small p-value of 3.9e-191 indicates that the difference between the means of the two groups of weather data is statistically signficant. We then reject the null hypothesis of equal averages and conclude that the differences between the data sets did not occur by chance.
 
 
 
