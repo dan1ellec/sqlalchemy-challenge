@@ -19,7 +19,7 @@ To conduct a climate analysis of Honolulu, Hawaii using data from a SQLite datab
 
 Queries the last 12 months of precipitation data creating a Date vs. Precipitation plot and a summary statistics table.
 
-- image
+![precipitation_analysis](Resources/Images/precipitation_analysis)
 
 ### Station Analysis
 
